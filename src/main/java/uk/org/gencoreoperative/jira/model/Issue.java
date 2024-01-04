@@ -33,7 +33,7 @@ import lombok.ToString;
  * <pre>
  *             "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
  *             "id": "120937",
- *             "self": "https://bugster.forgerock.org/jira/rest/api/2/issue/120937",
+ *             "self": "https://xyz.org/jira/rest/api/2/issue/120937",
  *             "key": "OPENAM-16598",
  *             "fields":
  *             {
@@ -41,12 +41,12 @@ import lombok.ToString;
  *                 "components":
  *                 [
  *                     {
- *                         "self": "https://bugster.forgerock.org/jira/rest/api/2/component/11130",
+ *                         "self": "https://xyz.org/jira/rest/api/2/component/11130",
  *                         "id": "11130",
  *                         "name": "OpenID Connect"
  *                     },
  *                     {
- *                         "self": "https://bugster.forgerock.org/jira/rest/api/2/component/12961",
+ *                         "self": "https://xyz.org/jira/rest/api/2/component/12961",
  *                         "id": "12961",
  *                         "name": "trees"
  *                     }

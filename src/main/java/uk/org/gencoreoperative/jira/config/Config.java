@@ -51,7 +51,7 @@ public class Config {
     private boolean help;
 
     @Parameter(names = { "-u", "--username" },
-               description = "Username to authenticate to JIRA with",
+               description = "Username to authenticate to JIRA with.",
                required = true)
     private String username;
 
@@ -59,20 +59,24 @@ public class Config {
                validateValueWith = PasswordValidator.class,
                description = "The path of the file containing the JIRA password. Must be read-only for the user.",
                required = true)
-    private String password;
+    private String passwordFile;
 
     @Parameter(names = { "-s", "--serverURL" },
-               description = "The server URL of the JIRA server",
-               validateValueWith = URIValidator.class)
-    private String server = "https://bugster.forgerock.org/jira";
+               description = "The server URL of the JIRA server.",
+               validateValueWith = URIValidator.class,
+                required = true)
+    private String server;
 
     @Parameter(names = { "-j", "--jql" },
-               description = "The JQL to query from the server")
-    private String jql = "project in (OPENAM, AME) AND type in (Story, Bug, Improvement) AND component is not EMPTY AND summary !~ Backport";
+               description = "The JQL statement to query the server with. " +
+                       "See https://www.atlassian.com/software/jira/guides/jql/overview#what-is-jql for more information.",
+               required = true)
+    private String jql;
 
     @Parameter(names = { "-f", "--fields" },
-            description = "The fields from JIRA to extract as the text for the fasttext output")
-    private String fields = "components,summary";
+            description = "The fields from JIRA to extract from the JIRA Issue. If this is not specified then all " +
+                    "fields will be extracted.")
+    private String fields;
 
     @SneakyThrows
     public URI getServer() {
@@ -81,7 +85,7 @@ public class Config {
 
     @SneakyThrows // Should have been validated already
     public char[] getPassword() {
-        return new Scanner(Files.newInputStream(Paths.get(password))).nextLine().toCharArray();
+        return new Scanner(Files.newInputStream(Paths.get(passwordFile))).nextLine().toCharArray();
     }
 
     public Set<String> getFields() {
