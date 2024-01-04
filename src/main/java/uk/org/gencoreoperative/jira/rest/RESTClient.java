@@ -58,7 +58,7 @@ import uk.org.gencoreoperative.jira.model.SearchResults;
  */
 public class RESTClient {
     public static final int WINDOW = 100;
-    public static final Gson GSON = new Gson();
+    private static final Gson GSON = new Gson();
     private final Config config;
     private final String authHeader;
 
@@ -138,14 +138,6 @@ public class RESTClient {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
             return reader.lines().collect(Collectors.joining("\n"));
         }
-    }
-
-    public static void main(String... args) {
-        Config object = new Config();
-        JCommander commander = new JCommander(object);
-        commander.parse(args);
-        RESTClient client = new RESTClient(object);
-        client.stream().forEach(System.out::println);
     }
 
     /**

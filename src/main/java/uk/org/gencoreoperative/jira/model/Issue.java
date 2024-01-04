@@ -57,7 +57,6 @@ import lombok.ToString;
 @Getter
 @ToString
 public class Issue {
-    private String expand;
     private Integer id;
     private URL self;
     private String key;

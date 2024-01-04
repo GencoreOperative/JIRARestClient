@@ -30,19 +30,25 @@ import static java.util.stream.Collectors.toSet;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.beust.jcommander.Parameter;
+import com.beust.jcommander.Strings;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.SneakyThrows;
 
 /**
  * Configuration object that represents the configuration for the client.
  */
 @Getter
+@Setter
 @NoArgsConstructor
 public class Config {
     @Parameter(names = { "-h", "--help" },
@@ -89,6 +95,6 @@ public class Config {
     }
 
     public Set<String> getFields() {
-        return stream(fields.split(",")).collect(toSet());
+        return Strings.isStringEmpty(fields) ? Collections.emptySet() : stream(fields.split(",")).collect(toSet());
     }
 }

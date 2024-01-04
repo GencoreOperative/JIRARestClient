@@ -2,43 +2,67 @@
 
 ## Overview
 
-JIRARestClient is a Java-based client for interacting with JIRA (Atlassian's issue and project tracking software) 
-using its REST API. This allows you to export JIRA Issues in both POJO format. For demonstration purposes
-this is then converted to JSON for command line access.
+JIRARestClient is simple and limited Java client for interacting with JIRA (Atlassian's issue and project tracking 
+software) using the [v2 REST API](https://developer.atlassian.com/server/jira/platform/jira-rest-api-version-2-tutorial-8946379/). 
+This allows you to export JIRA Issues  in both POJO and JSON formats. We have provided a JSON export function to
+allow us to demonstrate the client on the command line.
+
+*Note:* The client only supports the Summary, Description, and Components fields in JIRA. It could easily be expanded to 
+include more fields.
 
 ## Configuration
 
-The configuration for JIRARestClient is defined in the Config class located in the org.example.config 
-package. This class provides a set of parameters that can be customized to suit your JIRA environment.
-Parameters
+The `Config` class details the configuration options that are required for this client to function. These are then
+used by the command line example class `Main`.
 
-* help: Displays help information for using the client.
-* username: Specifies the username for authenticating to JIRA. This parameter is required.
-* passwordFile: Specifies the path to the file containing the JIRA password. The file must be read-only for the user. This parameter is required and validated using the PasswordValidator class.
-* serverURL: Specifies the server URL of the JIRA server. If not provided, the default value is set to "https://bugster.forgerock.org/jira". This parameter is validated using the URIValidator class.
-* jql: Specifies the JIRA Query Language (JQL) to query from the server. If not provided, the default JQL is set to filter issues based on project, issue type, components, and summary.
-* fields: Specifies the JIRA fields to extract as text for the FastText output. If not provided, the default fields are set to "components,summary".
+In order export JIRA issues, we need to provide the following:
+
+* The URL of the server that we are exporting from.
+* The authentication credentials in the form of a username and password file.
+* The [JQL (JIRA Query Language)](https://support.atlassian.com/jira-service-management-cloud/docs/use-advanced-search-with-jira-query-language-jql/) statement used to select the issues to export.
+* The fields that we are exporting from the Issue.
+
+Once these are provided, the client will perform the query and then page through the results printing the
+JSON output.
 
 ## Usage
 
-To use JIRARestClient, create an instance of the Config class and set the desired parameters. You can then pass this 
-configuration object to the JIRAClient for interacting with the JIRA server.
+We can access the project programmatically by invoking the `RESTClient` with an initialised `Config` instance, 
+or we can run the project from the command line using the `Main` class. The following examples demonstrate this
+approach.
 
-### Example usage:
+Help information can be obtained from the `--help` option:
+```
+$ java -jar jira-export.jar --help
+Usage: jira-export [options]
+  Options:
+    -f, --fields
+      The fields from JIRA to extract from the JIRA Issue. If this is not 
+      specified then all fields will be extracted.
+    -h, --help
+      Shows this help information
+  * -j, --jql
+      The JQL statement to query the server with. See 
+      https://www.atlassian.com/software/jira/guides/jql/overview#what-is-jql 
+      for more information.
+  * -p, --passwordFile
+      The path of the file containing the JIRA password. Must be read-only for 
+      the user.
+  * -s, --serverURL
+      The server URL of the JIRA server.
+  * -u, --username
+      Username to authenticate to JIRA with.
+```
 
-```java
-public class Main {
-public static void main(String[] args) {
-Config config = new Config();
-// Set the desired configuration parameters
-config.setUsername("your_username");
-config.setPasswordFile("/path/to/password/file");
-// Set other parameters as needed
-
-        JIRAClient jiraClient = new JIRAClient(config);
-        // Use the JIRAClient to interact with the JIRA server
-    }
-}
+Next, we can use this utility to perform a query against a JIRA server with the following example.
+You will need to provide your own authentication credentials, Server URL, and JQL statement.
+```
+echo "<password>" > .password; chmod 400 .password
+java -jar jira-export.jar \
+    -u <username> \
+    -p .password \
+    -s https://your.server.here/jira \
+    -j "type = Bug AND created >= startOfWeek(-1)"
 ```
 
 ## Dependencies
